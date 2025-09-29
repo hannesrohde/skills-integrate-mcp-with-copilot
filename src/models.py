@@ -5,8 +5,8 @@ from sqlmodel import SQLModel, Field, Relationship
 
 class Signup(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    user_id: Optional[int] = Field(default=None, foreign_key="user.id")
-    activity_id: Optional[int] = Field(default=None, foreign_key="activity.id")
+    user_id: int = Field(foreign_key="user.id", nullable=False)
+    activity_id: int = Field(foreign_key="activity.id", nullable=False)
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
     # relationships

@@ -5,6 +5,7 @@ A super simple FastAPI application that allows students to view and sign up
 for extracurricular activities at Mergington High School.
 """
 
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
@@ -25,10 +26,13 @@ current_dir = Path(__file__).parent
 app.mount("/static", StaticFiles(directory=current_dir / "static"), name="static")
 
 
-@app.on_event("startup")
-def on_startup():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     eng = init_db()
     seed_data(eng)
+    yield
+
+app.lifespan = lifespan
 
 
 @app.get("/")
